@@ -12,7 +12,7 @@ function mojoMutkiExchange( totalMojos ) {
     return mojos;
 }
 
-// mojoMutkiExchange( 10 )
+mojoMutkiExchange( 10 )
 
 class Inventory {
     constructor( stock ) {
@@ -66,12 +66,12 @@ class Inventory {
 const inventory = new Inventory( { "tons": 1, "kilograms": 0, "grams": 0, "milligrams": 0 }
 );
 
-// const afterSale = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1, "milligrams": 0 }, "sell" );
-// console.log( "Sale:", afterSale );
+const afterSale = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1, "milligrams": 0 }, "sell" );
+console.log( "Sale:", afterSale );
 
 
-// const afterPurchase = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1001, "milligrams": 0 }, "purchase" );
-// console.log( "Purchase:", afterPurchase );
+const afterPurchase = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1001, "milligrams": 0 }, "purchase" );
+console.log( "Purchase:", afterPurchase );
 
 
 
@@ -151,8 +151,10 @@ class PaymentsQueue {
 
 const queue = new PaymentsQueue();
 
-for ( let i = 0; i < 5; i++ ) {
+
+
+for ( let i = 0; i < 10; i++ ) {
     queue.addPayments();
 }
 
-// queue.processAllPayments();
+queue.processAllPayments();
