@@ -1,21 +1,21 @@
-function mojoMutkiExchange(totalMojos) {
+function mojoMutkiExchange( totalMojos ) {
     let mojos = totalMojos;
     let mutkis = totalMojos;
-    while (mutkis > 3) {
-        const newMojos = Math.floor(mutkis / 3);
+    while ( mutkis > 3 ) {
+        const newMojos = Math.floor( mutkis / 3 );
         mojos += newMojos;
-        mutkisleft = Math.floor(mojos % 3);
+        mutkisleft = Math.floor( mojos % 3 );
         mutkis = newMojos + mutkisleft;
 
     }
-    console.log(`${mojos} mojos consumed`)
+    console.log( `${mojos} mojos consumed` )
     return mojos;
 }
 
-mojoMutkiExchange(10)
+// mojoMutkiExchange( 10 )
 
 class Inventory {
-    constructor(stock) {
+    constructor( stock ) {
         this.stock = stock;
         this.units = {
             tons: 1000000000,
@@ -24,37 +24,37 @@ class Inventory {
             milligrams: 1
         }
     }
-    toMilligrams(quantity) {
+    toMilligrams( quantity ) {
         let totalMilligrams = 0;
-        for (const unit in quantity) {
+        for ( const unit in quantity ) {
             totalMilligrams += quantity[unit] * this.units[unit];
         }
         return totalMilligrams;
     }
-    fromMilligrams(totalMG) {
+    fromMilligrams( totalMG ) {
         const result = {};
-        for (const unit of Object.keys(this.units)) {
+        for ( const unit of Object.keys( this.units ) ) {
             const unitValue = this.units[unit];
-            result[unit] = Math.floor(totalMG / unitValue);
+            result[unit] = Math.floor( totalMG / unitValue );
             totalMG = totalMG % unitValue;
         }
         return result;
     }
-    update(qty, type) {
-        const currentStockInMG = this.toMilligrams(this.stock);
-        const newQuantityInMG = this.toMilligrams(qty);
+    update( qty, type ) {
+        const currentStockInMG = this.toMilligrams( this.stock );
+        const newQuantityInMG = this.toMilligrams( qty );
 
         let updatedMG;
-        if (type === "purchase") {
+        if ( type === "purchase" ) {
             updatedMG = currentStockInMG + newQuantityInMG;
-        } else if (type === "sell") {
+        } else if ( type === "sell" ) {
             updatedMG = currentStockInMG - newQuantityInMG;
-            if (updatedMG < 0) throw new Error("No stock left");
+            if ( updatedMG < 0 ) throw new Error( "No stock left" );
         } else {
-            throw new Error("Try using 'purchase' or 'sell'.");
+            throw new Error( "Try using 'purchase' or 'sell'." );
         }
 
-        this.stock = this.fromMilligrams(updatedMG);
+        this.stock = this.fromMilligrams( updatedMG );
         return this.stock;
     }
 
@@ -63,20 +63,21 @@ class Inventory {
     }
 }
 
-const inventory = new Inventory({ tons: 1, kilograms: 2, grams: 0, milligrams: 0 });
+const inventory = new Inventory( { "tons": 1, "kilograms": 0, "grams": 0, "milligrams": 0 }
+);
 
-const afterSale = inventory.update({ tons: 0, kilograms: 0, grams: 1, milligrams: 0 }, "sell");
-console.log("Sale:", afterSale);
+// const afterSale = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1, "milligrams": 0 }, "sell" );
+// console.log( "Sale:", afterSale );
 
 
-const afterPurchase = inventory.update({ tons: 0, kilograms: 0, grams: 1001, milligrams: 0 }, "purchase");
-console.log("Purchase:", afterPurchase);
+// const afterPurchase = inventory.update( { "tons": 0, "kilograms": 0, "grams": 1001, "milligrams": 0 }, "purchase" );
+// console.log( "Purchase:", afterPurchase );
 
 
 
 
 class Payment {
-    constructor(id, amount, status) {
+    constructor( id, amount, status ) {
         this.id = id;
         this.amount = amount;
         this.time = Date.now();
@@ -89,20 +90,20 @@ class PaymentsQueue {
         this.failedPayments = {};
     }
     generateRandomTransaction() {
-        const id = Math.floor(Math.random() * 10);
-        const amount = Math.floor(Math.random() * (1000 - 10 + 1)) + 10;
-        const payment = new Payment(id, amount, null)
+        const id = Math.floor( Math.random() * 10 );
+        const amount = Math.floor( Math.random() * ( 1000 - 10 + 1 ) ) + 10;
+        const payment = new Payment( id, amount, null )
         return payment;
     }
     addPayments() {
         const payment = this.generateRandomTransaction();
-        this.payments.push(payment)
+        this.payments.push( payment )
     }
-    processPayment(payment) {
-        if (payment.status && payment.status === 'success') return;
-        const randomId = Math.floor(Math.random() * 1000);
+    processPayment( payment ) {
+        if ( payment.status && payment.status === 'success' ) return;
+        const randomId = Math.floor( Math.random() * 1000 );
 
-        if (payment.id === randomId) {
+        if ( payment.id === randomId ) {
             payment.status = 'success';
             return 'Your Payment has been processed successfully';
         } else {
@@ -110,26 +111,26 @@ class PaymentsQueue {
             const key = payment.id;
             let delay = 0;
             let count = 0;
-            if (this.hasFailedPayments() && this.failedPayments[key]) {
+            if ( this.hasFailedPayments() && this.failedPayments[key] ) {
                 count = this.failedPayments[key]++
             } else {
                 count = 1;
                 this.failedPayments[key] = 1;
             }
-            delay = this.getRetryDelay(count)
-            console.log('failed', this.failedPayments)
-            console.log(`Retrying payment ${payment.id} in ${delay / 1000}s`);
-            setTimeout(() => {
-                this.processPayment(payment)
-            }, delay)
+            delay = this.getRetryDelay( count )
+            console.log( 'failed', this.failedPayments )
+            console.log( `Retrying payment ${payment.id} in ${delay / 1000}s` );
+            setTimeout( () => {
+                this.processPayment( payment )
+            }, delay )
         }
     }
     hasFailedPayments() {
-        return Object.keys(this.failedPayments).length !== 0;
+        return Object.keys( this.failedPayments ).length !== 0;
     }
 
-    getRetryDelay(failureCount) {
-        if (failureCount <= 0) return 0;
+    getRetryDelay( failureCount ) {
+        if ( failureCount <= 0 ) return 0;
         const delayConstants = {
             1: 2,
             2: 5,
@@ -142,16 +143,16 @@ class PaymentsQueue {
         return delayMinutes * 60 * 1000;
     }
     processAllPayments() {
-        this.payments.forEach((payment) => {
-            this.processPayment(payment);
-        });
+        this.payments.forEach( ( payment ) => {
+            this.processPayment( payment );
+        } );
     }
 }
 
 const queue = new PaymentsQueue();
 
-for (let i = 0; i < 5; i++) {
+for ( let i = 0; i < 5; i++ ) {
     queue.addPayments();
 }
 
-queue.processAllPayments();
+// queue.processAllPayments();
